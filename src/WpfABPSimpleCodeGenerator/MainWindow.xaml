@@ -7,6 +7,21 @@
         mc:Ignorable="d"
         Title="{StaticResource MainTitle}" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>            
+        </Grid.RowDefinitions>
 
+        <TabControl Grid.Row="1">
+            <TabItem Header="{StaticResource CodeGenerator}">
+                <Grid>
+                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="{StaticResource BasicData}">
+                
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
