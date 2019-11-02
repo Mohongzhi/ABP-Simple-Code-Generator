@@ -20,7 +20,27 @@
                 </Grid>
             </TabItem>
             <TabItem Header="{StaticResource BasicData}">
-                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition Height="2*"></RowDefinition>
+                            <RowDefinition Height="7*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock>IOCManager</TextBlock>
+                        <Grid Grid.Row="1">
+                            <Button>add</Button>
+                        </Grid>
+                        <ListBox Grid.Row="2">
+                            
+                        </ListBox>
+                    </Grid>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
