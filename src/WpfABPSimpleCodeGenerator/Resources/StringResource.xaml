@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WpfABPSimpleCodeGenerator.Resources"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime.InteropServices">
+    <sys:String x:Key="MainTitle">ABP Simple Code Generator</sys:String>
+    <sys:String x:Key="TblText">Support multi language demo.</sys:String>
+    <sys:String x:Key="BtnOK">OK</sys:String>
+    <sys:String x:Key="HdNo">No.</sys:String>
+    <sys:String x:Key="HdName">Name</sys:String>
+    <sys:String x:Key="HdGender">Gender</sys:String>
+    <sys:String x:Key="HdDept">Dept</sys:String>
+    <sys:String x:Key="HdEmail">Email</sys:String>
+    <sys:String x:Key="HdTel">Tel</sys:String>
+    <sys:String x:Key="MsgShowTime">Now time is:{0}</sys:String>
+</ResourceDictionary>
