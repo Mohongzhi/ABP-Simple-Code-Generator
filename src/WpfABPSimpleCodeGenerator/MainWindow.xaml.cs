@@ -65,7 +65,6 @@ namespace WpfABPSimpleCodeGenerator
             checkGenerateDto.DataContext = itemForGenerator;
             checkGenerateHTML.DataContext = itemForGenerator;
             checkInheritEntity.DataContext = itemForGenerator;
-            listIocInject.ItemsSource = iocItems;
             #endregion
 
             #region Basic data management
@@ -75,6 +74,7 @@ namespace WpfABPSimpleCodeGenerator
             lblSummary.DataContext = itemForEdit;
             LoadIoc();
             listEntities.ItemsSource = iocItems; 
+            listIocInject.ItemsSource = iocItems;
             #endregion
         }
 
@@ -114,6 +114,18 @@ namespace WpfABPSimpleCodeGenerator
             File.WriteAllText(iocItems_path, JsonConvert.SerializeObject(iocItems));
         }
 
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                var tb = sender as TextBlock;
+                var name = tb.Text;
+                iocItems.Remove(iocItems.First(p => p.Name == name));
+            }
+            File.WriteAllText(iocItems_path, JsonConvert.SerializeObject(iocItems));
+        }
+
         #endregion
 
         #region Generator window
@@ -128,5 +140,6 @@ namespace WpfABPSimpleCodeGenerator
         }
 
         #endregion
+
     }
 }
