@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,8 +46,56 @@ namespace WpfABPSimpleCodeGenerator
             {
                 Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);
                 Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-            } 
+            }
             #endregion
+
+
+            lblName.DataContext = itemForEdit;
+            lblCode.DataContext = itemForEdit;
+            lblAttributeName.DataContext = itemForEdit;
+            lblSummary.DataContext = itemForEdit;
+            LoadEntities();
+            listEntities.ItemsSource = iocItems;
         }
+
+        #region Basic data management 基础数据管理
+
+        IocItem itemForEdit = new IocItem();
+
+        BindingList<IocItem> iocItems;
+
+        const string iocItems_path = "IocItems.json";
+
+        /// <summary>
+        /// 加载实体
+        /// </summary>
+        public void LoadEntities()
+        {
+            if (!File.Exists(iocItems_path))
+            {
+                iocItems = new BindingList<IocItem>();
+                return;
+            }
+            iocItems = JsonConvert.DeserializeObject<BindingList<IocItem>>(File.ReadAllText(iocItems_path));
+        }
+
+        private void BtnAddEntity_Click(object sender, RoutedEventArgs e)
+        {
+            var item = new IocItem()
+            {
+                AttributeName = itemForEdit.AttributeName,
+                Code = itemForEdit.Code,
+                Name = itemForEdit.Name,
+                Summary = itemForEdit.Summary
+            };
+
+            iocItems.Add(item);
+
+            File.WriteAllText(iocItems_path, JsonConvert.SerializeObject(iocItems));
+        }
+
+        #endregion
+
+
     }
 }

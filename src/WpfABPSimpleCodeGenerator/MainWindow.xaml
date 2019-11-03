@@ -33,11 +33,38 @@
                             <RowDefinition Height="7*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <TextBlock>IOCManager</TextBlock>
-                        <Grid Grid.Row="1">
-                            <Button>add</Button>
-                        </Grid>
-                        <ListBox Grid.Row="2">
-                            
+                        <StackPanel Grid.Row="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="名称:"></TextBlock>
+                                <TextBox Name="lblName" Text="{Binding Name}" Width="120" ></TextBox>
+                                <TextBlock Text="公用名称:"></TextBlock>
+                                <TextBox Name="lblAttributeName" Text="{Binding AttributeName}"  Width="120" ></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="注释:"></TextBlock>
+                                <TextBox Name="lblSummary" Text="{Binding Summary}" Width="120" ></TextBox>
+                                <TextBlock Text="注入代码:"></TextBlock>
+                                <TextBox Name="lblCode" Text="{Binding Code}" Width="120" ></TextBox>
+                            </StackPanel>
+                            <Button Click="BtnAddEntity_Click">添加</Button>
+                        </StackPanel>
+                        <ListBox x:Name="listEntities" Grid.Row="2">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5,0">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Ellipse Stroke="#C1C1C1"
+                                                             StrokeThickness="1" 
+                                                             Width="6" 
+                                                             VerticalAlignment="Center"
+                                                             Height="6" 
+                                                             Fill="#DDFF82"/>
+                                            <TextBlock Text="{Binding Name}"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
                 </Grid>
