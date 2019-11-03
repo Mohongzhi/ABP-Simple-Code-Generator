@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfABPSimpleCodeGenerator"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="{StaticResource MainTitle}" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -16,7 +16,95 @@
         <TabControl Grid.Row="1">
             <TabItem Header="{StaticResource CodeGenerator}">
                 <Grid>
-                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"></RowDefinition>
+                        <RowDefinition Height="8*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="实体名称"></TextBlock>
+                            <TextBox Name="txtEntityName" Text="{Binding EntityName}" Width="120"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="字段名:"></TextBlock>
+                            <TextBox Name="txtFieldName" Text="{Binding FieldName}" Width="120"></TextBox>
+                            <TextBlock Text="数据类型:"></TextBlock>
+                            <ComboBox Name="txtDataType" Text="{Binding DataType}" Width="120"></ComboBox>
+                            <TextBlock Text="字段注释:"></TextBlock>
+                            <TextBox Name="txtFieldSummary" Text="{Binding FieldSummary}" Width="120"></TextBox>
+                            <Button Width="80" Click="BtnAddEntity_Click">添加</Button>
+                        </StackPanel>
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition Width="7*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Name="listFields">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5,0">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Ellipse Stroke="#C1C1C1"
+                                                             StrokeThickness="1" 
+                                                             Width="6" 
+                                                             VerticalAlignment="Center"
+                                                             Height="6" 
+                                                             Fill="#DDFF82"/>
+                                            <TextBlock Text="{Binding FieldName}"
+                                                       VerticalAlignment="Center" FontSize="16" Margin="10,0,10,0"/>
+                                            <TextBlock Text="{Binding DataType}"
+                                                       VerticalAlignment="Center" FontSize="16" Margin="10,0,10,0"/>
+                                            <TextBlock Text="{Binding FieldSummary}"
+                                                       VerticalAlignment="Center" FontSize="16" Margin="10,0,10,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <StackPanel Grid.Column="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="继承Entity:"></TextBlock>
+                                <CheckBox Name="checkInheritEntity" IsChecked="{Binding InheritEntity}" Margin="0,0,10,0"></CheckBox>
+                                <TextBlock Text="生成dto:"></TextBlock>
+                                <CheckBox Name="checkGenerateDto" IsChecked="{Binding GenerateDto}" Margin="0,0,10,0"></CheckBox>
+                                <TextBlock Text="生成API:"></TextBlock>
+                                <CheckBox Name="checkGenerateAPI" IsChecked="{Binding GenerateAPI}" Margin="0,0,10,0"></CheckBox>
+                                <TextBlock Text="生成HTML:"></TextBlock>
+                                <CheckBox Name="checkGenerateHTML" IsChecked="{Binding GenerateHTML}" Margin="0,0,10,0"></CheckBox>
+                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition Width="7*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="IOC 注入"></TextBlock>
+                                    </StackPanel>
+                                    <ListBox Name="listIocInject">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Margin="5,0">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Ellipse Stroke="#C1C1C1"
+                                                             StrokeThickness="1" 
+                                                             Width="6" 
+                                                             VerticalAlignment="Center"
+                                                             Height="6" 
+                                                             Fill="#DDFF82"/>
+                                                        <TextBlock Text="{Binding Name}"
+                                                       VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="{StaticResource BasicData}">
@@ -46,7 +134,7 @@
                                 <TextBlock Text="注入代码:"></TextBlock>
                                 <TextBox Name="lblCode" Text="{Binding Code}" Width="120" ></TextBox>
                             </StackPanel>
-                            <Button Click="BtnAddEntity_Click">添加</Button>
+                            <Button Click="BtnAddIoc_Click">添加</Button>
                         </StackPanel>
                         <ListBox x:Name="listEntities" Grid.Row="2">
                             <ListBox.ItemTemplate>

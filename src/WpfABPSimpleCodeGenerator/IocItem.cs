@@ -10,6 +10,24 @@ namespace WpfABPSimpleCodeGenerator
     /// </summary>
     public class IocItem : INotifyPropertyChanged
     {
+        private bool _IsChecked { get; set; }
+
+        /// <summary>
+        /// to binding name
+        /// </summary>
+        public bool IsChecked
+        {
+            get
+            {
+                return _IsChecked;
+            }
+            set
+            {
+                _IsChecked = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChecked"));
+            }
+        }
+
         private string _Name { get; set; }
 
         /// <summary>

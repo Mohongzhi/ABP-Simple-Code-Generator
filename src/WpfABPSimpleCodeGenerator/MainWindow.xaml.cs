@@ -49,13 +49,33 @@ namespace WpfABPSimpleCodeGenerator
             }
             #endregion
 
+            #region Generator window
+            txtDataType.Items.Add("string");
+            txtDataType.Items.Add("int");
+            txtDataType.Items.Add("decimal");
+            txtDataType.Items.Add("double");
+            txtDataType.Items.Add("bool");
 
+            listFields.ItemsSource = entityFieldItems;
+            txtEntityName.DataContext = itemForGenerator;
+            txtDataType.DataContext = itemForGenerator;
+            txtFieldName.DataContext = itemForGenerator;
+            txtFieldSummary.DataContext = itemForGenerator;
+            checkGenerateAPI.DataContext = itemForGenerator;
+            checkGenerateDto.DataContext = itemForGenerator;
+            checkGenerateHTML.DataContext = itemForGenerator;
+            checkInheritEntity.DataContext = itemForGenerator;
+            listIocInject.ItemsSource = iocItems;
+            #endregion
+
+            #region Basic data management
             lblName.DataContext = itemForEdit;
             lblCode.DataContext = itemForEdit;
             lblAttributeName.DataContext = itemForEdit;
             lblSummary.DataContext = itemForEdit;
-            LoadEntities();
-            listEntities.ItemsSource = iocItems;
+            LoadIoc();
+            listEntities.ItemsSource = iocItems; 
+            #endregion
         }
 
         #region Basic data management 基础数据管理
@@ -67,9 +87,9 @@ namespace WpfABPSimpleCodeGenerator
         const string iocItems_path = "IocItems.json";
 
         /// <summary>
-        /// 加载实体
+        /// 
         /// </summary>
-        public void LoadEntities()
+        public void LoadIoc()
         {
             if (!File.Exists(iocItems_path))
             {
@@ -79,7 +99,7 @@ namespace WpfABPSimpleCodeGenerator
             iocItems = JsonConvert.DeserializeObject<BindingList<IocItem>>(File.ReadAllText(iocItems_path));
         }
 
-        private void BtnAddEntity_Click(object sender, RoutedEventArgs e)
+        private void BtnAddIoc_Click(object sender, RoutedEventArgs e)
         {
             var item = new IocItem()
             {
@@ -96,6 +116,17 @@ namespace WpfABPSimpleCodeGenerator
 
         #endregion
 
+        #region Generator window
 
+        GeneratorItem itemForGenerator = new GeneratorItem() { DataType = "string" , InheritEntity=true, GenerateAPI=true, GenerateDto=true, GenerateHTML=true};
+
+        BindingList<EntityFieldItem> entityFieldItems = new BindingList<EntityFieldItem>();
+
+        public void BtnAddEntity_Click(object sender, RoutedEventArgs e)
+        {
+            entityFieldItems.Add(new EntityFieldItem() { DataType = itemForGenerator.DataType, FieldName = itemForGenerator.FieldName, FieldSummary = itemForGenerator.FieldSummary });
+        }
+
+        #endregion
     }
 }
