@@ -25,6 +25,21 @@ namespace WpfABPSimpleCodeGenerator
             }
         }
 
+        private string _EntitySummary;
+
+        public string EntitySummary
+        {
+            get
+            {
+                return _EntitySummary;
+            }
+            set
+            {
+                _EntitySummary = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("EntitySummary"));
+            }
+        }
+
         private string _FieldName;
 
         public string FieldName
@@ -127,6 +142,51 @@ namespace WpfABPSimpleCodeGenerator
             {
                 _GenerateHTML = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("GenerateHTML"));
+            }
+        }
+
+        private bool _CreationAudited;
+
+        public bool CreationAudited
+        {
+            get
+            {
+                return _CreationAudited;
+            }
+            set
+            {
+                _CreationAudited = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CreationAudited"));
+            }
+        }
+
+        private bool _ModifyAudited;
+
+        public bool ModifyAudited
+        {
+            get
+            {
+                return _ModifyAudited;
+            }
+            set
+            {
+                _ModifyAudited = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ModifyAudited"));
+            }
+        }
+
+        private bool _DeletionAudited;
+
+        public bool DeletionAudited
+        {
+            get
+            {
+                return _DeletionAudited;
+            }
+            set
+            {
+                _DeletionAudited = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DeletionAudited"));
             }
         }
 

@@ -24,6 +24,14 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="实体名称"></TextBlock>
                             <TextBox Name="txtEntityName" Text="{Binding EntityName}" Width="120"></TextBox>
+                            <TextBlock Text="实体注释" Margin="10,0,0,0"></TextBlock>
+                            <TextBox Name="txtEntitySummary" Text="{Binding EntitySummary}" Width="120"></TextBox>
+                            <TextBlock Text="创建审计:"></TextBlock>
+                            <CheckBox Name="checkCreationAudited" IsChecked="{Binding CreationAudited}" Margin="0,0,10,0"></CheckBox>
+                            <TextBlock Text="修改审计:"></TextBlock>
+                            <CheckBox Name="checkModifyAudited" IsChecked="{Binding ModifyAudited}" Margin="0,0,10,0"></CheckBox>
+                            <TextBlock Text="删除审计:"></TextBlock>
+                            <CheckBox Name="checkDeletionAudited" IsChecked="{Binding DeletionAudited}" Margin="0,0,10,0"></CheckBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="字段名:"></TextBlock>
@@ -32,7 +40,7 @@
                             <ComboBox Name="txtDataType" Text="{Binding DataType}" Width="120"></ComboBox>
                             <TextBlock Text="字段注释:"></TextBlock>
                             <TextBox Name="txtFieldSummary" Text="{Binding FieldSummary}" Width="120"></TextBox>
-                            <Button Width="80" Click="BtnAddEntity_Click">添加</Button>
+                            <Button Width="80" Click="BtnAddEntity_Click">添加字段</Button>
                         </StackPanel>
                     </StackPanel>
                     <Grid Grid.Row="1">
@@ -74,7 +82,7 @@
                                 <TextBlock Text="生成dto:"></TextBlock>
                                 <CheckBox Name="checkGenerateDto" IsChecked="{Binding GenerateDto}" Margin="0,0,10,0"></CheckBox>
                                 <TextBlock Text="生成API:"></TextBlock>
-                                <CheckBox Name="checkGenerateAPI" IsChecked="{Binding GenerateAPI}" Margin="0,0,10,0"></CheckBox>
+                                <CheckBox Name="checkGenerateAPI" IsChecked="{Binding GenerateAPI}" Checked="checkGenerateAPI_Checked" Unchecked="checkGenerateAPI_Checked" Margin="0,0,10,0"></CheckBox>
                                 <TextBlock Text="生成HTML:"></TextBlock>
                                 <CheckBox Name="checkGenerateHTML" IsChecked="{Binding GenerateHTML}" Margin="0,0,10,0"></CheckBox>
                             </StackPanel>
@@ -108,8 +116,12 @@
                                     </Grid>
 
                                 </Grid>
+                                <Grid Grid.Column="1">
+                                    <Button Height="40" Width="80" Click="BtnGenerate_Click">生成</Button>
+                                </Grid>
                             </Grid>
                         </Grid>
+                        
                     </Grid>
                 </Grid>
             </TabItem>
@@ -131,7 +143,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="名称:"></TextBlock>
                                 <TextBox Name="lblName" Text="{Binding Name}" Width="120" ></TextBox>
-                                <TextBlock Text="公用名称:"></TextBlock>
+                                <TextBlock Text="代码名称:"></TextBlock>
                                 <TextBox Name="lblAttributeName" Text="{Binding AttributeName}"  Width="120" ></TextBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -140,7 +152,11 @@
                                 <TextBlock Text="注入代码:"></TextBlock>
                                 <TextBox Name="lblCode" Text="{Binding Code}" Width="120" ></TextBox>
                             </StackPanel>
-                            <Button Click="BtnAddIoc_Click">添加</Button>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="命名空间:"></TextBlock>
+                                <TextBox Name="lblNamespace" Text="{Binding Namespace}" Width="120" ></TextBox>
+                                <Button Click="BtnAddIoc_Click" Width="80" Margin="10,0,0,0">添加</Button>
+                            </StackPanel>
                         </StackPanel>
                         <ListBox x:Name="listEntities" Grid.Row="2">
                             <ListBox.ItemTemplate>
@@ -155,12 +171,13 @@
                                                              Fill="#DDFF82"/>
                                             <TextBlock Text="{Binding Name}" MouseDown="TextBlock_MouseDown"
                                                        VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Summary}" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                    </Grid>
+                    </Grid>                  
                 </Grid>
             </TabItem>
         </TabControl>

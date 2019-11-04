@@ -98,6 +98,24 @@ namespace WpfABPSimpleCodeGenerator
             }
         }
 
+        private string _Namespace { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Namespace
+        {
+            get
+            {
+                return _Namespace;
+            }
+            set
+            {
+                _Namespace = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Namespace"));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
