@@ -161,7 +161,6 @@ namespace WpfABPSimpleCodeGenerator
 
         public void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
-
             #region Entity generate
             StringBuilder sbForGenerateEntity = new StringBuilder();
             {
@@ -718,14 +717,17 @@ namespace WpfABPSimpleCodeGenerator
             }
         }
 
-        #endregion
-
+        /// <summary>
+        /// API checked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkGenerateAPI_Checked(object sender, RoutedEventArgs e)
         {
             listIocInject.IsEnabled = checkGenerateAPI.IsChecked ?? false;
             if (listIocInject.IsEnabled)
                 itemForGenerator.GenerateDto = true;//API must be generate the dto
-
         }
+        #endregion
     }
 }
