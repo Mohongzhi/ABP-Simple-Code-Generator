@@ -86,7 +86,6 @@ namespace WpfABPSimpleCodeGenerator
             #endregion
 
             #region Basic data management
-            lblName.DataContext = itemForEdit;
             lblCode.DataContext = itemForEdit;
             lblAttributeName.DataContext = itemForEdit;
             lblSummary.DataContext = itemForEdit;
@@ -124,7 +123,7 @@ namespace WpfABPSimpleCodeGenerator
             {
                 AttributeName = itemForEdit.AttributeName,
                 Code = itemForEdit.Code,
-                Name = itemForEdit.Name,
+                //Name = itemForEdit.Name,
                 Summary = itemForEdit.Summary,
                 Namespace = itemForEdit.Namespace
             };
@@ -141,7 +140,7 @@ namespace WpfABPSimpleCodeGenerator
             {
                 var tb = sender as TextBlock;
                 var name = tb.Text;
-                iocItems.Remove(iocItems.First(p => p.Name == name));
+                iocItems.Remove(iocItems.First(p => p.Code == name));
             }
             File.WriteAllText(iocItems_path, JsonConvert.SerializeObject(iocItems));
         }

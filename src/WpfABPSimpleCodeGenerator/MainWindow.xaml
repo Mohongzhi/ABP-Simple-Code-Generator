@@ -106,7 +106,7 @@
                                                              Height="6" 
                                                              Fill="#DDFF82"/>
                                                             <CheckBox IsChecked="{Binding IsChecked}"></CheckBox>
-                                                            <TextBlock Text="{Binding Name}"
+                                                            <TextBlock Text="{Binding Summary}"
                                                        VerticalAlignment="Center"/>
                                                         </StackPanel>
                                                     </Border>
@@ -140,21 +140,20 @@
                         </Grid.RowDefinitions>
                         <TextBlock>IOCManager</TextBlock>
                         <StackPanel Grid.Row="1">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="名称:"></TextBlock>
-                                <TextBox Name="lblName" Text="{Binding Name}" Width="120" ></TextBox>
-                                <TextBlock Text="代码名称:"></TextBlock>
-                                <TextBox Name="lblAttributeName" Text="{Binding AttributeName}"  Width="120" ></TextBox>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="注入代码:" ToolTip="例子:IDBHelper helper中的'IDBHelper'"></TextBlock>
+                                <TextBox Name="lblCode" Text="{Binding Code}" Width="120"  ToolTip="例子:IDBHelper helper中的'IDBHelper'"></TextBox>
+                                <TextBlock Text="代码名称:" ToolTip="例子:IDBHelper helper中的'helper'" Margin="10,0,0,0"></TextBlock>
+                                <TextBox Name="lblAttributeName" Text="{Binding AttributeName}"  Width="120" ToolTip="例子:IDBHelper helper中的'helper'"></TextBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="注释:"></TextBlock>
                                 <TextBox Name="lblSummary" Text="{Binding Summary}" Width="120" ></TextBox>
-                                <TextBlock Text="注入代码:"></TextBlock>
-                                <TextBox Name="lblCode" Text="{Binding Code}" Width="120" ></TextBox>
+                                <TextBlock Text="命名空间:" ToolTip="例: System.XX.xxx" Margin="10,0,0,0"></TextBlock>
+                                <TextBox Name="lblNamespace" Text="{Binding Namespace}" Width="120" ></TextBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="命名空间:"></TextBlock>
-                                <TextBox Name="lblNamespace" Text="{Binding Namespace}" Width="120" ></TextBox>
+                               
                                 <Button Click="BtnAddIoc_Click" Width="80" Margin="10,0,0,0">添加</Button>
                             </StackPanel>
                         </StackPanel>
@@ -169,9 +168,9 @@
                                                              VerticalAlignment="Center"
                                                              Height="6" 
                                                              Fill="#DDFF82"/>
-                                            <TextBlock Text="{Binding Name}" MouseDown="TextBlock_MouseDown"
+                                            <TextBlock Text="{Binding Code}" MouseDown="TextBlock_MouseDown"
                                                        VerticalAlignment="Center"/>
-                                            <TextBlock Text="{Binding Summary}" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+                                            <TextBlock Text="{Binding Summary}" VerticalAlignment="Center" Margin="10,0,0,0" MouseDown="TextBlock_MouseDown"></TextBlock>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>

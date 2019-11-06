@@ -28,23 +28,23 @@ namespace WpfABPSimpleCodeGenerator
             }
         }
 
-        private string _Name { get; set; }
+        //private string _Name { get; set; }
 
-        /// <summary>
-        /// to binding name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
-            }
-        }
+        ///// <summary>
+        ///// to binding name
+        ///// </summary>
+        //public string Name
+        //{
+        //    get
+        //    {
+        //        return _Name;
+        //    }
+        //    set
+        //    {
+        //        _Name = value;
+        //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
+        //    }
+        //}
 
         private string _Summary { get; set; }
 
