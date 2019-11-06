@@ -40,6 +40,21 @@ namespace WpfABPSimpleCodeGenerator
             }
         }
 
+        private string _EntityNamespace;
+
+        public string EntityNamespace
+        {
+            get
+            {
+                return _EntityNamespace;
+            }
+            set
+            {
+                _EntityNamespace = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("EntityNamespace"));
+            }
+        }
+
         private string _FieldName;
 
         public string FieldName

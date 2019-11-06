@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfABPSimpleCodeGenerator"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="{StaticResource MainTitle}" Height="450" Width="800">
+        Title="{StaticResource MainTitle}" Height="550" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
@@ -25,9 +25,11 @@
                             <TextBlock Text="实体名称"></TextBlock>
                             <TextBox Name="txtEntityName" Text="{Binding EntityName}" Width="120"></TextBox>
                             <TextBlock Text="实体注释" Margin="10,0,0,0"></TextBlock>
-                            <TextBox Name="txtEntitySummary" Text="{Binding EntitySummary}" Width="120"></TextBox>
+                            <TextBox Name="txtEntitySummary" Text="{Binding EntitySummary}" Width="120" Margin="10,0,0,0"></TextBox>
+                            <TextBlock Text="实体命名空间" Margin="10,0,0,0"></TextBlock>
+                            <TextBox Name="txtEntityNamespace" Text="{Binding EntityNamespace}" Width="140" Margin="10,0,0,0"></TextBox>
                             <TextBlock Text="创建审计:"></TextBlock>
-                            <CheckBox Name="checkCreationAudited" IsChecked="{Binding CreationAudited}" Margin="0,0,10,0"></CheckBox>
+                            <CheckBox Name="checkCreationAudited" IsChecked="{Binding CreationAudited}" Margin="10,0,10,0"></CheckBox>
                             <TextBlock Text="修改审计:"></TextBlock>
                             <CheckBox Name="checkModifyAudited" IsChecked="{Binding ModifyAudited}" Margin="0,0,10,0"></CheckBox>
                             <TextBlock Text="删除审计:"></TextBlock>
@@ -150,10 +152,9 @@
                                 <TextBlock Text="注释:"></TextBlock>
                                 <TextBox Name="lblSummary" Text="{Binding Summary}" Width="120" ></TextBox>
                                 <TextBlock Text="命名空间:" ToolTip="例: System.XX.xxx" Margin="10,0,0,0"></TextBlock>
-                                <TextBox Name="lblNamespace" Text="{Binding Namespace}" Width="120" ></TextBox>
+                                <TextBox Name="lblNamespace" Text="{Binding Namespace}" Width="140" ></TextBox>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                               
+                            <StackPanel Orientation="Horizontal">                               
                                 <Button Click="BtnAddIoc_Click" Width="80" Margin="10,0,0,0">添加</Button>
                             </StackPanel>
                         </StackPanel>

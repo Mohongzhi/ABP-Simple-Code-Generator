@@ -166,7 +166,7 @@ namespace WpfABPSimpleCodeGenerator
                 sbForGenerateEntity.AppendLine("using Abp.Domain.Entities;");
                 sbForGenerateEntity.AppendLine("using Abp.Domain.Entities.Auditing;");
                 sbForGenerateEntity.AppendLine("using System;");
-                sbForGenerateEntity.AppendLine($"namespace {DefaultNamespace}");
+                sbForGenerateEntity.AppendLine($"namespace {itemForGenerator.EntityNamespace}");
                 sbForGenerateEntity.AppendLine("{");//namespace start
 
                 sbForGenerateEntity.AppendLine("/// <summary>");
@@ -697,6 +697,20 @@ namespace WpfABPSimpleCodeGenerator
             CommonFileDialogResult result = dialog.ShowDialog();
             if (result == CommonFileDialogResult.Ok)
             {
+                #region 添加IOC
+                var item = new IocItem()
+                {
+                    AttributeName = itemForGenerator.EntityName.Substring(0, 1).ToLower() + itemForGenerator.EntityName.Substring(1) + $"Repository",
+                    Code = $"IRepository<{itemForGenerator.EntityName }>",
+                    Summary = itemForGenerator.EntitySummary,
+                    Namespace = itemForGenerator.EntityNamespace
+                };
+
+                iocItems.Add(item);
+
+                File.WriteAllText(iocItems_path, JsonConvert.SerializeObject(iocItems));
+                #endregion
+
                 var folder = dialog.FileName;
                 File.WriteAllText($"{folder}/{itemForGenerator.EntityName}.cs", sbForGenerateEntity.ToString());
 
@@ -712,7 +726,14 @@ namespace WpfABPSimpleCodeGenerator
                 if (itemForGenerator.GenerateHTML)
                     File.WriteAllText($"{folder}/Index.cshtml", sbForHtml.ToString());
                 MessageBox.Show("保存完成");
-                System.Diagnostics.Process.Start(folder);
+                try
+                {
+                    System.Diagnostics.Process.Start(folder);
+                }
+                catch
+                {
+
+                }
             }
         }
 
