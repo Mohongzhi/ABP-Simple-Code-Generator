@@ -260,6 +260,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForDto.AppendLine("using Abp.AutoMapper;");
                     sbForDto.AppendLine("using Abp.Domain.Entities.Auditing;");
                     sbForDto.AppendLine("using System;");
+                    sbForDto.AppendLine($"using {itemForGenerator.EntityNamespace};");
                     sbForDto.AppendLine($"namespace {DefaultNamespace}");
                     sbForDto.AppendLine("{");//namespace start
 
@@ -418,6 +419,8 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("using Abp.ObjectMapping;");
                     sbForAppService.AppendLine("using Newtonsoft.Json;");
                     sbForAppService.AppendLine("using Newtonsoft.Json.Linq;");
+                    sbForAppService.AppendLine($"using {itemForGenerator.EntityNamespace};");
+
                     foreach (var item in checkedIocItems)//IOC namespace
                     {
                         sbForAppService.AppendLine($"using {item.Namespace};");
