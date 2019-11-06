@@ -74,6 +74,7 @@ namespace WpfABPSimpleCodeGenerator
             txtDataType.DataContext = itemForGenerator;
             txtFieldName.DataContext = itemForGenerator;
             txtFieldSummary.DataContext = itemForGenerator;
+            txtEntityNamespace.DataContext = itemForGenerator;
             checkGenerateAPI.DataContext = itemForGenerator;
             checkGenerateDto.DataContext = itemForGenerator;
             checkGenerateHTML.DataContext = itemForGenerator;
