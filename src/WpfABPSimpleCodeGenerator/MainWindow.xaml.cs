@@ -440,9 +440,9 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("private readonly IObjectMapper _objectMapper;");
                     sbForAppService.AppendLine("");
                     sbForAppService.AppendLine("/// <summary>");
-                    sbForAppService.AppendLine($"/// {itemForGenerator.EntityName} repository");
+                    sbForAppService.AppendLine($"/// {itemForGenerator.EntitySummary} Repository");
                     sbForAppService.AppendLine("/// </summary>");
-                    sbForAppService.AppendLine($"private readonly IRepository<{itemForGenerator.EntityName}> _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository");
+                    sbForAppService.AppendLine($"private readonly IRepository<{itemForGenerator.EntityName}> _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository;");
                     sbForAppService.AppendLine("");
                     foreach (var item in checkedIocItems)
                     {//Ioc
@@ -575,7 +575,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbEditModalInputs.AppendLine($@"
                             <div class=""col-sm-12"">
                                 <div class=""form-group form-float"">
-                                    <div class=""form-line"">
+                                    <div class=""form-line focused"">
                                         <input class=""form-control"" type=""text"" id=""{item.FieldName}"" v-model=""{item.FieldName}"" required minlength=""2"">
                                         <label class=""form-label"">{item.FieldSummary}</label>
                                     </div>
@@ -590,7 +590,7 @@ namespace WpfABPSimpleCodeGenerator
         <div class=""modal-content"">
             <div class=""modal-header"">
                 <h4 class=""modal-title"">
-                    <span>@L(""CreateSurvey"")</span>
+                    <span>@L(""CreateEdit"")</span>
                 </h4>
             </div>
             <div id=""ForEditDiv"" class=""modal-body"">
@@ -611,87 +611,87 @@ namespace WpfABPSimpleCodeGenerator
 </div>
 ");//editModal
                 sbForHtml.AppendLine("<script>");//script start
-                sbForHtml.AppendLine("var obj = {};");
-                sbForHtml.AppendLine("var modalVue = null;");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}var obj = {{}};");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}var modalVue = null;");
                 sbForHtml.AppendLine("");
-                sbForHtml.AppendLine("$(function () {");//$function start
-                sbForHtml.AppendLine("obj.id=null;");
+                sbForHtml.AppendLine($"${GetFormatterSpace(1)}(function () {{");//$function start
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}obj.id=null;");
                 foreach (var item in entityFieldItems)
-                    sbForHtml.AppendLine($"obj.{item.FieldName}='';");
-                sbForHtml.AppendLine("modalVue = new Vue({ el: '#ForEditDiv',data: obj});");
-                sbForHtml.AppendLine("});");//$function end
-                sbForHtml.AppendLine("var locale = '@CultureInfo.CurrentUICulture.Name';");
-                sbForHtml.AppendLine("if (locale == 'zh-Hans') {locale = \"zh-CN\";}");
-                sbForHtml.AppendLine("var table = $('#table');");
-                sbForHtml.AppendLine("table.bootstrapTable({");//table start
-                sbForHtml.AppendLine($"url: abp.appPath + 'api/services/app/{itemForGenerator.EntityName}/Get{itemForGenerator.EntityName}ByPagenation',");
-                sbForHtml.AppendLine("locale:locale,");
-                sbForHtml.AppendLine("queryParamsType: 'limit',sidePagination: 'server',silentSort: false,");
-                sbForHtml.AppendLine("pagination: true,search: true,sortable: true,sortName: 'id',");
-                sbForHtml.AppendLine("pageSize: 10,");
+                    sbForHtml.AppendLine($"{GetFormatterSpace(2)}obj.{item.FieldName}='';");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}modalVue = new Vue({{ el: '#ForEditDiv',data: obj}});");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}}});");//$function end
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}var locale = '@CultureInfo.CurrentUICulture.Name';");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}if (locale == 'zh-Hans') {{locale = \"zh-CN\";}}");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}var table = $('#table');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}table.bootstrapTable({{");//table start
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}url: abp.appPath + 'api/services/app/{itemForGenerator.EntityName}/Get{itemForGenerator.EntityName}ByPagenation',");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}locale:locale,");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}queryParamsType: 'limit',sidePagination: 'server',silentSort: false,");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}pagination: true,search: true,sortable: true,sortName: 'id',");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}pageSize: 10,");
 
                 StringBuilder sbForColumns = new StringBuilder();
-                sbForColumns.AppendLine("columns: [");//columns start
-                sbForColumns.AppendLine("{field: 'id',title: 'ID',visible: false,},");
-                sbForColumns.AppendLine("{");//field start
-                sbForColumns.AppendLine($"title: '@L(\"Actions\")',field:'actions',");
-                sbForColumns.AppendLine("formatter: function (val, row, index) {");//formatter start
-                sbForColumns.AppendLine("return '<a onclick=\"Update(\'' + row.id + '\')\" role=\"button\" ><i class=\"material-icons\">edit</i></a><a href=\"#\" onclick=\"DeleteById(\'' + row.id + '\')\" data-menu-id=\"' + row.id + '\"><i class=\"material-icons\">delete_sweep</i></a>';");
-                sbForColumns.AppendLine("}");//formatter end
-                sbForColumns.AppendLine("},");//field end
+                sbForColumns.AppendLine($"{GetFormatterSpace(2)}columns: [");//columns start
+                sbForColumns.AppendLine($"{GetFormatterSpace(3)}{{field: 'id',title: 'ID',visible: false,}},");
+                sbForColumns.AppendLine($"{GetFormatterSpace(3)}{{");//field start
+                sbForColumns.AppendLine($"{GetFormatterSpace(4)}title: '@L(\"Actions\")',field:'actions',");
+                sbForColumns.AppendLine($"{GetFormatterSpace(4)}formatter: function (val, row, index) {{");//formatter start
+                sbForColumns.AppendLine($"{GetFormatterSpace(5)}return '<a onclick=\"Update(\'' + row.id + '\')\" role=\"button\" ><i class=\"material-icons\">edit</i></a><a href=\"#\" onclick=\"DeleteById(\'' + row.id + '\')\" data-menu-id=\"' + row.id + '\"><i class=\"material-icons\">delete_sweep</i></a>';");
+                sbForColumns.AppendLine($"{GetFormatterSpace(4)}}}");//formatter end
+                sbForColumns.AppendLine($"{GetFormatterSpace(3)}}},");//field end
 
                 foreach (var item in entityFieldItems)
                 {
-                    sbForColumns.AppendLine("{");
-                    sbForColumns.AppendLine($"field: '{item.FieldName.ToLower()}', sortable: true, title: '@L(\"{item.FieldName}\")'");
-                    sbForColumns.AppendLine("},");
+                    sbForColumns.AppendLine($"{GetFormatterSpace(3)}{{");
+                    sbForColumns.AppendLine($"{GetFormatterSpace(4)}field: '{item.FieldName.ToLower()}', sortable: true, title: '@L(\"{item.FieldName}\")'");
+                    sbForColumns.AppendLine($"{GetFormatterSpace(3)}}},");
                 }
-                sbForColumns.AppendLine("],");
+                sbForColumns.AppendLine($"{GetFormatterSpace(2)}],");
                 sbForHtml.AppendLine(sbForColumns.ToString());
-                sbForHtml.AppendLine("responseHandler: function (res) {return res.result;}");
-                sbForHtml.AppendLine("});");//table end
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}responseHandler: function (res) {{return res.result;}}");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}}});");//table end
                 sbForHtml.AppendLine("");
-                sbForHtml.AppendLine("function Save() {");//save start
-                sbForHtml.AppendLine($"abp.services.app.{itemForGenerator.EntityName.ToLower()}.createOrUpdate{itemForGenerator.EntityName}(obj, null).done(function () {{");
-                sbForHtml.AppendLine("$('#CreateModalLabel').modal('hide');");
-                sbForHtml.AppendLine("table.bootstrapTable('refresh');");
-                sbForHtml.AppendLine("}).fail(function (data) {");
-                sbForHtml.AppendLine("abp.message.error('保存失败! 请重试...', '提示', false);");
-                sbForHtml.AppendLine("});");
-                sbForHtml.AppendLine("}");//save end
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}function Save() {{");//save start
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.services.app.{itemForGenerator.EntityName.ToLower()}.createOrUpdate{itemForGenerator.EntityName}(obj, null).done(function () {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}$('#CreateModalLabel').modal('hide');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}table.bootstrapTable('refresh');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}}}).fail(function (data) {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}abp.message.error('保存失败! 请重试...', '提示', false);");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}}});");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}}}");//save end
                 sbForHtml.AppendLine("");
-                sbForHtml.AppendLine("function DeleteById(id) {");//delete start
-                sbForHtml.AppendLine("abp.message.confirm('是否要删除此行数据?', '提示', function (data) {");
-                sbForHtml.AppendLine("if (data) {");
-                sbForHtml.AppendLine($"abp.services.app.{itemForGenerator.EntityName.ToLower()}.delete{itemForGenerator.EntityName}ById(id, null).done(function () {{");
-                sbForHtml.AppendLine("table.bootstrapTable('refresh');");
-                sbForHtml.AppendLine("abp.message.success('删除成功', '', false);");
-                sbForHtml.AppendLine("}).fail(function () {");
-                sbForHtml.AppendLine("table.bootstrapTable('refresh');");
-                sbForHtml.AppendLine("abp.message.error('删除失败', '', false);");
-                sbForHtml.AppendLine(" });");
-                sbForHtml.AppendLine("}");
-                sbForHtml.AppendLine("}, false);");
-                sbForHtml.AppendLine("}");//delete end
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}function DeleteById(id) {{");//delete start
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.message.confirm('是否要删除此行数据?', '提示', function (data) {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}if (data) {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(4)}abp.services.app.{itemForGenerator.EntityName.ToLower()}.delete{itemForGenerator.EntityName}ById(id, null).done(function () {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(5)}table.bootstrapTable('refresh');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(5)}abp.message.success('删除成功', '', false);");
+                sbForHtml.AppendLine($"{GetFormatterSpace(4)}}}).fail(function () {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(5)}table.bootstrapTable('refresh');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(5)}abp.message.error('删除失败', '', false);");
+                sbForHtml.AppendLine($"{GetFormatterSpace(4)}}});");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}}}");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}}}, false);");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}}}");//delete end
                 sbForHtml.AppendLine("");
-                sbForHtml.AppendLine("function Create() {");//create start
-                sbForHtml.AppendLine("obj.id=null;");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}function Create() {{");//create start
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}obj.id=null;");
                 foreach (var item in entityFieldItems)
-                    sbForHtml.AppendLine($"obj.{item.FieldName}='';");
-                sbForHtml.AppendLine("delete obj.id;");
-                sbForHtml.AppendLine("$('#CreateModalLabel').modal('show');");
-                sbForHtml.AppendLine("}");//create end
+                    sbForHtml.AppendLine($"{GetFormatterSpace(2)}obj.{item.FieldName}='';");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}delete obj.id;");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}$('#CreateModalLabel').modal('show');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}}}");//create end
                 sbForHtml.AppendLine("");
-                sbForHtml.AppendLine("function Update(id) {");//update start
-                sbForHtml.AppendLine($"abp.services.app.{itemForGenerator.EntityName.ToLower()}.get{itemForGenerator.EntityName}ById(id, null).done(function (data) {{");
-                sbForHtml.AppendLine("obj.id = data.id;");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}function Update(id) {{");//update start
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.services.app.{itemForGenerator.EntityName.ToLower()}.get{itemForGenerator.EntityName}ById(id, null).done(function (data) {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}obj.id = data.id;");
                 foreach (var item in entityFieldItems)
-                    sbForHtml.AppendLine($"obj.{item.FieldName} = data.{item.FieldName.Substring(0, 1).ToLower() + item.FieldName.Substring(1)};");
-                sbForHtml.AppendLine("$('#CreateModalLabel').modal('show');");
-                sbForHtml.AppendLine("}).fail(function (data) {");
-                sbForHtml.AppendLine("abp.message.error('修改失败', '', false);");
-                sbForHtml.AppendLine("});");
-                sbForHtml.AppendLine("}");//update end
+                    sbForHtml.AppendLine($"{GetFormatterSpace(3)}obj.{item.FieldName} = data.{item.FieldName.Substring(0, 1).ToLower() + item.FieldName.Substring(1)};");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}$('#CreateModalLabel').modal('show');");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}}}).fail(function (data) {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(3)}abp.message.error('修改失败', '', false);");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}}});");
+                sbForHtml.AppendLine($"{GetFormatterSpace(1)}}}");//update end
                 sbForHtml.AppendLine("</script>");//script start
             }
             #endregion
@@ -753,5 +753,16 @@ namespace WpfABPSimpleCodeGenerator
                 itemForGenerator.GenerateDto = true;//API must be generate the dto
         }
         #endregion
+
+        public string GetFormatterSpace(int numberOfFormatter)
+        {
+            var total = numberOfFormatter * 4;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i <= total; i++)
+            {
+                sb.Append(' ');
+            }
+            return sb.ToString();
+        }
     }
 }
