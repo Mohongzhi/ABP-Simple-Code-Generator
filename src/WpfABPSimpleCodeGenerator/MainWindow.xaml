@@ -61,7 +61,7 @@
                                                              VerticalAlignment="Center"
                                                              Height="6" 
                                                              Fill="#DDFF82"/>
-                                            <TextBlock Text="{Binding FieldName}"
+                                            <TextBlock Text="{Binding FieldName}" MouseDown="TextBlockDelete_MouseDown"
                                                        VerticalAlignment="Center" FontSize="16" Margin="10,0,10,0"/>
                                             <TextBlock Text="{Binding DataType}"
                                                        VerticalAlignment="Center" FontSize="16" Margin="10,0,10,0"/>

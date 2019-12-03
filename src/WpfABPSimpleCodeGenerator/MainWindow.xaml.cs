@@ -146,6 +146,16 @@ namespace WpfABPSimpleCodeGenerator
             File.WriteAllText(iocItems_path, JsonConvert.SerializeObject(iocItems));
         }
 
+        private void TextBlockDelete_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                var tb = sender as TextBlock;
+                var name = tb.Text;
+                entityFieldItems.Remove(entityFieldItems.First(p => p.FieldName == name));
+            }
+        }
+
         #endregion
 
         #region Generator window
@@ -260,6 +270,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForDto.AppendLine("using Abp.AutoMapper;");
                     sbForDto.AppendLine("using Abp.Domain.Entities.Auditing;");
                     sbForDto.AppendLine("using System;");
+                    sbForDto.AppendLine("using Abp.Domain.Entities;");
                     sbForDto.AppendLine($"using {itemForGenerator.EntityNamespace};");
                     sbForDto.AppendLine($"namespace {DefaultNamespace}");
                     sbForDto.AppendLine("{");//namespace start
@@ -384,6 +395,7 @@ namespace WpfABPSimpleCodeGenerator
                 {
                     sbForIAppService.AppendLine("using Abp.Application.Services;");
                     sbForIAppService.AppendLine("using System.Collections.Generic;");
+                    sbForIAppService.AppendLine("using FengWo.Dtos;");
                     sbForIAppService.AppendLine("using System.Threading.Tasks;");
                     sbForIAppService.AppendLine($"namespace {DefaultNamespace}");
                     sbForIAppService.AppendLine("{");//namespace start
@@ -417,8 +429,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("using System.Linq.Dynamic.Core;");
                     sbForAppService.AppendLine("using System.Linq;");
                     sbForAppService.AppendLine("using Abp.ObjectMapping;");
+                    sbForAppService.AppendLine("using FengWo.Dtos;");
                     sbForAppService.AppendLine("using Newtonsoft.Json;");
                     sbForAppService.AppendLine("using Newtonsoft.Json.Linq;");
+                    sbForAppService.AppendLine("using Abp.Application.Services;");
                     sbForAppService.AppendLine($"using {itemForGenerator.EntityNamespace};");
 
                     foreach (var item in checkedIocItems)//IOC namespace
@@ -432,6 +446,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine($"/// {itemForGenerator.EntitySummary} Services");
                     sbForAppService.AppendLine("/// </summary>");
                     var classDtoItem = $"public class {itemForGenerator.EntityName}AppService: ApplicationService, I{itemForGenerator.EntityName}AppService";
+                    sbForAppService.AppendLine(classDtoItem);
                     sbForAppService.AppendLine("{");//class start
 
                     sbForAppService.AppendLine("/// <summary>");
@@ -462,7 +477,7 @@ namespace WpfABPSimpleCodeGenerator
                     {
                         sbIOCList.AppendLine($"{item.Code} {item.AttributeName.Substring(0, 1).ToLower()}{item.AttributeName.Substring(1)},");
                     }
-                    sbForAppService.AppendLine($"{sbIOCList.ToString().TrimEnd(',')})");
+                    sbForAppService.AppendLine($"{sbIOCList.ToString().TrimEnd('\r').TrimEnd(',')})");
                     sbForAppService.AppendLine("{");//construction start
                     sbForAppService.AppendLine("_objectMapper = objectMapper;");
                     sbForAppService.AppendLine($"_{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository = {itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository;");
@@ -524,7 +539,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine($"public Task Delete{itemForGenerator.EntityName}ById(int id)");
                     sbForAppService.AppendLine("{");//delete start
                     sbForAppService.AppendLine($"var entity =  _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.Get(id);");
-                    sbForAppService.AppendLine("return _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.DeleteAsync(entity);");
+                    sbForAppService.AppendLine($"return _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.DeleteAsync(entity);");
                     sbForAppService.AppendLine("}");//delete end
                     sbForAppService.AppendLine("}");//class end
                     sbForAppService.AppendLine("}");//namespace end
@@ -550,7 +565,7 @@ namespace WpfABPSimpleCodeGenerator
 ");
                 sbForHtml.AppendLine($@"
 <div class=""row clearfix"">
-    < div class=""col-lg-12 col-md-12 col-sm-12 col-xs-12"">
+    <div class=""col-lg-12 col-md-12 col-sm-12 col-xs-12"">
         <div class=""card"">
             <div class=""header"">
                 <h2>
@@ -636,14 +651,14 @@ namespace WpfABPSimpleCodeGenerator
                 sbForColumns.AppendLine($"{GetFormatterSpace(3)}{{");//field start
                 sbForColumns.AppendLine($"{GetFormatterSpace(4)}title: '@L(\"Actions\")',field:'actions',");
                 sbForColumns.AppendLine($"{GetFormatterSpace(4)}formatter: function (val, row, index) {{");//formatter start
-                sbForColumns.AppendLine($"{GetFormatterSpace(5)}return '<a onclick=\"Update(\'' + row.id + '\')\" role=\"button\" ><i class=\"material-icons\">edit</i></a><a href=\"#\" onclick=\"DeleteById(\'' + row.id + '\')\" data-menu-id=\"' + row.id + '\"><i class=\"material-icons\">delete_sweep</i></a>';");
+                sbForColumns.AppendLine($"{GetFormatterSpace(5)}return '<a onclick=\"Update(\' + row.id + \')\" role=\"button\" ><i class=\"material-icons\">edit</i></a><a href=\"#\" onclick=\"DeleteById(\' + row.id + \')\" data-menu-id=\"' + row.id + '\"><i class=\"material-icons\">delete_sweep</i></a>';");
                 sbForColumns.AppendLine($"{GetFormatterSpace(4)}}}");//formatter end
                 sbForColumns.AppendLine($"{GetFormatterSpace(3)}}},");//field end
 
                 foreach (var item in entityFieldItems)
                 {
                     sbForColumns.AppendLine($"{GetFormatterSpace(3)}{{");
-                    sbForColumns.AppendLine($"{GetFormatterSpace(4)}field: '{item.FieldName.ToLower()}', sortable: true, title: '@L(\"{item.FieldName}\")'");
+                    sbForColumns.AppendLine($"{GetFormatterSpace(4)}field: '{item.FieldName.Substring(0,1).ToLower()+ item.FieldName.Substring(1)}', sortable: true, title: '{item.FieldSummary}'");
                     sbForColumns.AppendLine($"{GetFormatterSpace(3)}}},");
                 }
                 sbForColumns.AppendLine($"{GetFormatterSpace(2)}],");
@@ -652,7 +667,7 @@ namespace WpfABPSimpleCodeGenerator
                 sbForHtml.AppendLine($"{GetFormatterSpace(1)}}});");//table end
                 sbForHtml.AppendLine("");
                 sbForHtml.AppendLine($"{GetFormatterSpace(1)}function Save() {{");//save start
-                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.services.app.{itemForGenerator.EntityName.ToLower()}.createOrUpdate{itemForGenerator.EntityName}(obj, null).done(function () {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.services.app.{itemForGenerator.EntityName.Substring(0, 1).ToLower() + itemForGenerator.EntityName.Substring(1)}.createOrUpdate{itemForGenerator.EntityName}(obj, null).done(function () {{");
                 sbForHtml.AppendLine($"{GetFormatterSpace(3)}$('#CreateModalLabel').modal('hide');");
                 sbForHtml.AppendLine($"{GetFormatterSpace(3)}table.bootstrapTable('refresh');");
                 sbForHtml.AppendLine($"{GetFormatterSpace(2)}}}).fail(function (data) {{");
@@ -663,7 +678,7 @@ namespace WpfABPSimpleCodeGenerator
                 sbForHtml.AppendLine($"{GetFormatterSpace(1)}function DeleteById(id) {{");//delete start
                 sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.message.confirm('是否要删除此行数据?', '提示', function (data) {{");
                 sbForHtml.AppendLine($"{GetFormatterSpace(3)}if (data) {{");
-                sbForHtml.AppendLine($"{GetFormatterSpace(4)}abp.services.app.{itemForGenerator.EntityName.ToLower()}.delete{itemForGenerator.EntityName}ById(id, null).done(function () {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(4)}abp.services.app.{itemForGenerator.EntityName.Substring(0,1).ToLower()+ itemForGenerator.EntityName.Substring(1)}.delete{itemForGenerator.EntityName}ById(id, null).done(function () {{");
                 sbForHtml.AppendLine($"{GetFormatterSpace(5)}table.bootstrapTable('refresh');");
                 sbForHtml.AppendLine($"{GetFormatterSpace(5)}abp.message.success('删除成功', '', false);");
                 sbForHtml.AppendLine($"{GetFormatterSpace(4)}}}).fail(function () {{");
@@ -683,7 +698,7 @@ namespace WpfABPSimpleCodeGenerator
                 sbForHtml.AppendLine($"{GetFormatterSpace(1)}}}");//create end
                 sbForHtml.AppendLine("");
                 sbForHtml.AppendLine($"{GetFormatterSpace(1)}function Update(id) {{");//update start
-                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.services.app.{itemForGenerator.EntityName.ToLower()}.get{itemForGenerator.EntityName}ById(id, null).done(function (data) {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.services.app.{itemForGenerator.EntityName.Substring(0, 1).ToLower() + itemForGenerator.EntityName.Substring(1)}.get{itemForGenerator.EntityName}ById(id, null).done(function (data) {{");
                 sbForHtml.AppendLine($"{GetFormatterSpace(3)}obj.id = data.id;");
                 foreach (var item in entityFieldItems)
                     sbForHtml.AppendLine($"{GetFormatterSpace(3)}obj.{item.FieldName} = data.{item.FieldName.Substring(0, 1).ToLower() + item.FieldName.Substring(1)};");
