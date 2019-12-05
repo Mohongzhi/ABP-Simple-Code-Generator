@@ -29,7 +29,7 @@
                             <TextBlock Text="实体命名空间" Margin="10,0,0,0"></TextBlock>
                             <TextBox Name="txtEntityNamespace" Text="{Binding EntityNamespace}" Width="140" Margin="10,0,0,0"></TextBox>
                             <TextBlock Text="创建审计:"></TextBlock>
-                            <CheckBox Name="checkCreationAudited" IsChecked="{Binding CreationAudited}" Margin="10,0,10,0"></CheckBox>
+                            <CheckBox Name="checkCreationAudited" IsChecked="{Binding CreationAudited}" Margin="4,0,10,0"></CheckBox>
                             <TextBlock Text="修改审计:"></TextBlock>
                             <CheckBox Name="checkModifyAudited" IsChecked="{Binding ModifyAudited}" Margin="0,0,10,0"></CheckBox>
                             <TextBlock Text="删除审计:"></TextBlock>

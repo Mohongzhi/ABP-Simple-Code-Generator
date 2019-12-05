@@ -473,11 +473,20 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine($"public {itemForGenerator.EntityName}AppService(IObjectMapper objectMapper,");
                     StringBuilder sbIOCList = new StringBuilder();
                     sbIOCList.AppendLine($"IRepository<{itemForGenerator.EntityName}> {itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository,");
-                    foreach (var item in checkedIocItems)
+                    var items = checkedIocItems.ToList();
+                    for (int i = 0; i < items.Count(); i++)
                     {
-                        sbIOCList.AppendLine($"{item.Code} {item.AttributeName.Substring(0, 1).ToLower()}{item.AttributeName.Substring(1)},");
+                        var item = items[i];
+                        if (i == items.Count - 1)
+                        {
+                            sbIOCList.Append($"{item.Code} {item.AttributeName.Substring(0, 1).ToLower()}{item.AttributeName.Substring(1)},");
+                        }
+                        else
+                        {
+                            sbIOCList.AppendLine($"{item.Code} {item.AttributeName.Substring(0, 1).ToLower()}{item.AttributeName.Substring(1)},");
+                        }
                     }
-                    sbForAppService.AppendLine($"{sbIOCList.ToString().TrimEnd('\r').TrimEnd(',')})");
+                    sbForAppService.AppendLine($"{sbIOCList.ToString().TrimEnd(',')})");
                     sbForAppService.AppendLine("{");//construction start
                     sbForAppService.AppendLine("_objectMapper = objectMapper;");
                     sbForAppService.AppendLine($"_{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository = {itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository;");
@@ -507,7 +516,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine($"var all = _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.GetAll();");
                     sbForAppService.AppendLine("if (pagedSortedAndSearchInputDto.Search != null && pagedSortedAndSearchInputDto.Search.Trim().Length > 0)");
                     sbForAppService.AppendLine("{");//if start
-                    sbForAppService.AppendLine("all = all.Where(item=>item.Name.Contains(pagedSortedAndSearchInputDto.Search));");
+                    sbForAppService.AppendLine($"all = all.Where(item=>item.{entityFieldItems[0].FieldName}.Contains(pagedSortedAndSearchInputDto.Search));//Change this Where for search");
                     sbForAppService.AppendLine("}");//if end
                     sbForAppService.AppendLine("var total = all.Count();");
                     sbForAppService.AppendLine("if (pagedSortedAndSearchInputDto.Sort.Trim().Length > 0)");
