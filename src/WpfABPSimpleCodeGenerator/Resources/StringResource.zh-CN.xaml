@@ -4,6 +4,7 @@
     <sys:String x:Key="MainTitle">ABP简易代码生成器</sys:String>
     <sys:String x:Key="CodeGenerator">代码生成器</sys:String>
     <sys:String x:Key="BasicData">基础数据</sys:String>
+    <sys:String x:Key="Setting">设置</sys:String>
     <sys:String x:Key="HdNo">No.</sys:String>
     <sys:String x:Key="HdName">Name</sys:String>
     <sys:String x:Key="HdGender">Gender</sys:String>

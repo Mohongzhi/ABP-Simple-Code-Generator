@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfABPSimpleCodeGenerator"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="{StaticResource MainTitle}" Height="550" Width="900">
+        Title="{StaticResource MainTitle}" Height="850" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
@@ -28,14 +28,17 @@
                             <TextBox Name="txtEntitySummary" Text="{Binding EntitySummary}" Width="120" Margin="10,0,0,0"></TextBox>
                             <TextBlock Text="实体命名空间" Margin="10,0,0,0"></TextBlock>
                             <TextBox Name="txtEntityNamespace" Text="{Binding EntityNamespace}" Width="140" Margin="10,0,0,0"></TextBox>
-                            <TextBlock Text="创建审计:"></TextBlock>
+                            <TextBlock Text="主键类型:" Margin="10,0,0,0"></TextBlock>
+                            <RadioButton Name="RBLongType" Content="long" IsChecked="{Binding IsTypeLong}"></RadioButton>
+                            <RadioButton Content="int" IsChecked="False"></RadioButton>
+                            <TextBlock Text="创建审计:" Margin="10,0,0,0"></TextBlock>
                             <CheckBox Name="checkCreationAudited" IsChecked="{Binding CreationAudited}" Margin="4,0,10,0"></CheckBox>
                             <TextBlock Text="修改审计:"></TextBlock>
                             <CheckBox Name="checkModifyAudited" IsChecked="{Binding ModifyAudited}" Margin="0,0,10,0"></CheckBox>
                             <TextBlock Text="删除审计:"></TextBlock>
                             <CheckBox Name="checkDeletionAudited" IsChecked="{Binding DeletionAudited}" Margin="0,0,10,0"></CheckBox>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                             <TextBlock Text="字段名:"></TextBlock>
                             <TextBox Name="txtFieldName" Text="{Binding FieldName}" Width="120"></TextBox>
                             <TextBlock Text="数据类型:"></TextBlock>
@@ -147,6 +150,9 @@
                                 <TextBox Name="lblCode" Text="{Binding Code}" Width="120"  ToolTip="例子:IDBHelper helper中的'IDBHelper'"></TextBox>
                                 <TextBlock Text="代码名称:" ToolTip="例子:IDBHelper helper中的'helper'" Margin="10,0,0,0"></TextBlock>
                                 <TextBox Name="lblAttributeName" Text="{Binding AttributeName}"  Width="120" ToolTip="例子:IDBHelper helper中的'helper'"></TextBox>
+                                <TextBlock Text="主键类型:" Margin="10,0,0,0"></TextBlock>
+                                <RadioButton x:Name="RBIOCLongType" Content="long" IsChecked="{Binding IsTypeLong}"></RadioButton>
+                                <RadioButton Content="int" IsChecked="False"></RadioButton>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="注释:"></TextBlock>
@@ -179,6 +185,30 @@
                         </ListBox>
                     </Grid>                  
                 </Grid>
+            </TabItem>
+            <TabItem Header="{StaticResource Setting}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="DbContext file path:"></Label>
+                        <TextBox  Name="TxtDbContextPath" Text="{Binding DbContextPath}" IsReadOnly="True" Width="320"></TextBox>
+                        <Button Name="BtnBrowseDbContextFilePath" Margin="4,0,0,0" Click="BtnBrowseDbContextFilePath_Click">Browse</Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <Label Content="Core project folder path:"></Label>
+                        <TextBox  Name="TxtCoreProjectPath" Text="{Binding CoreProjectPath}" IsReadOnly="True" Width="320"></TextBox>
+                        <Button Name="BtnBrowseCoreProjectFilePath" Margin="4,0,0,0" Click="BtnBrowseCoreProjectFilePath_Click">Browse</Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <Label Content="Application project folder path:"></Label>
+                        <TextBox  Name="TxtApplicationProjectPath" Text="{Binding ApplicationProjectPath}" IsReadOnly="True" Width="320"></TextBox>
+                        <Button Name="BtnBrowseApplicationProjectFilePath" Margin="4,0,0,0" Click="BtnBrowseApplicationProjectFilePath_Click">Browse</Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <Label Content="MVC project folder path:"></Label>
+                        <TextBox  Name="TxtMVCProjectPath" Text="{Binding MVCProjectPath}" IsReadOnly="True" Width="320"></TextBox>
+                        <Button Name="BtnBrowseMVCProjectFilePath" Margin="4,0,0,0" Click="BtnBrowseMVCProjectFilePath_Click">Browse</Button>
+                    </StackPanel>
+                </StackPanel>
             </TabItem>
         </TabControl>
     </Grid>

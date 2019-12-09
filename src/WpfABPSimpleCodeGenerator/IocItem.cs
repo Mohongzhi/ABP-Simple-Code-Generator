@@ -10,6 +10,21 @@ namespace WpfABPSimpleCodeGenerator
     /// </summary>
     public class IocItem : INotifyPropertyChanged
     {
+        private bool? _IsTypeLong;
+
+        public bool? IsTypeLong
+        {
+            get
+            {
+                return _IsTypeLong;
+            }
+            set
+            {
+                _IsTypeLong = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsTypeLong"));
+            }
+        }
+
         private bool _IsChecked { get; set; }
 
         /// <summary>

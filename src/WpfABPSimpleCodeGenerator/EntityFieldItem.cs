@@ -8,6 +8,21 @@ namespace WpfABPSimpleCodeGenerator
     public class EntityFieldItem : INotifyPropertyChanged
     {
 
+        private bool? _IsTypeLong;
+
+        public bool? IsTypeLong
+        {
+            get
+            {
+                return _IsTypeLong;
+            }
+            set
+            {
+                _IsTypeLong = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsTypeLong"));
+            }
+        }
+
         private string _FieldName;
 
         public string FieldName

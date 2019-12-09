@@ -75,6 +75,7 @@ namespace WpfABPSimpleCodeGenerator
             txtFieldName.DataContext = itemForGenerator;
             txtFieldSummary.DataContext = itemForGenerator;
             txtEntityNamespace.DataContext = itemForGenerator;
+            RBLongType.DataContext = itemForGenerator;
             checkGenerateAPI.DataContext = itemForGenerator;
             checkGenerateDto.DataContext = itemForGenerator;
             checkGenerateHTML.DataContext = itemForGenerator;
@@ -83,6 +84,7 @@ namespace WpfABPSimpleCodeGenerator
             checkCreationAudited.DataContext = itemForGenerator;
             checkDeletionAudited.DataContext = itemForGenerator;
             checkModifyAudited.DataContext = itemForGenerator;
+            TxtDbContextPath.DataContext = itemForGenerator;
 
             #endregion
 
@@ -91,10 +93,18 @@ namespace WpfABPSimpleCodeGenerator
             lblAttributeName.DataContext = itemForEdit;
             lblSummary.DataContext = itemForEdit;
             lblNamespace.DataContext = itemForEdit;
+            RBIOCLongType.DataContext = itemForEdit;
             LoadIoc();
             listEntities.ItemsSource = iocItems;
             listIocInject.ItemsSource = iocItems;
             #endregion
+
+            LoadSetting();
+
+            TxtApplicationProjectPath.DataContext = setting;
+            TxtCoreProjectPath.DataContext = setting;
+            TxtDbContextPath.DataContext = setting;
+            TxtMVCProjectPath.DataContext = setting;
         }
 
         #region Basic data management 基础数据管理
@@ -126,7 +136,8 @@ namespace WpfABPSimpleCodeGenerator
                 Code = itemForEdit.Code,
                 //Name = itemForEdit.Name,
                 Summary = itemForEdit.Summary,
-                Namespace = itemForEdit.Namespace
+                Namespace = itemForEdit.Namespace,
+                IsTypeLong = itemForEdit.IsTypeLong
             };
 
             iocItems.Add(item);
@@ -160,13 +171,13 @@ namespace WpfABPSimpleCodeGenerator
 
         #region Generator window
 
-        GeneratorItem itemForGenerator = new GeneratorItem() { DataType = "string", InheritEntity = true, GenerateAPI = true, GenerateDto = true, GenerateHTML = true, CreationAudited = true };
+        GeneratorItem itemForGenerator = new GeneratorItem() { DataType = "string", InheritEntity = true, GenerateAPI = true, GenerateDto = true, GenerateHTML = true, CreationAudited = true, IsTypeLong = false };
 
         BindingList<EntityFieldItem> entityFieldItems = new BindingList<EntityFieldItem>();
 
         public void BtnAddEntity_Click(object sender, RoutedEventArgs e)
         {
-            entityFieldItems.Add(new EntityFieldItem() { DataType = itemForGenerator.DataType, FieldName = itemForGenerator.FieldName, FieldSummary = itemForGenerator.FieldSummary });
+            entityFieldItems.Add(new EntityFieldItem() { DataType = itemForGenerator.DataType, FieldName = itemForGenerator.FieldName, FieldSummary = itemForGenerator.FieldSummary, IsTypeLong = itemForGenerator.IsTypeLong });
         }
 
         public void BtnGenerate_Click(object sender, RoutedEventArgs e)
@@ -186,7 +197,12 @@ namespace WpfABPSimpleCodeGenerator
 
                 var classItem = $"public class {itemForGenerator.EntityName}:";
                 if (itemForGenerator.InheritEntity)
-                    classItem += "Entity,";
+                {
+                    if (itemForGenerator.IsTypeLong.Value)
+                        classItem += "Entity<long>,";
+                    else
+                        classItem += "Entity,";
+                }
                 if (itemForGenerator.CreationAudited)
                     classItem += "ICreationAudited,";
                 if (itemForGenerator.ModifyAudited)
@@ -281,7 +297,12 @@ namespace WpfABPSimpleCodeGenerator
                     sbForDto.AppendLine($"[AutoMap(typeof({itemForGenerator.EntityName}))]");
                     var classDtoItem = $"public class {itemForGenerator.EntityName}Dto:";
                     if (itemForGenerator.InheritEntity)
-                        classDtoItem += "Entity,";
+                    {
+                        if (itemForGenerator.IsTypeLong.Value)
+                            classDtoItem += "Entity<long>,";
+                        else
+                            classDtoItem += "Entity,";
+                    }
                     if (itemForGenerator.CreationAudited)
                         classDtoItem += "ICreationAudited,";
                     if (itemForGenerator.ModifyAudited)
@@ -397,7 +418,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForIAppService.AppendLine("using System.Collections.Generic;");
                     sbForIAppService.AppendLine("using FengWo.Dtos;");
                     sbForIAppService.AppendLine("using System.Threading.Tasks;");
-                    sbForIAppService.AppendLine($"namespace {DefaultNamespace}");
+                    sbForIAppService.AppendLine($"namespace {itemForEdit.Namespace}");
                     sbForIAppService.AppendLine("{");//namespace start
 
                     sbForIAppService.AppendLine("/// <summary>");
@@ -411,7 +432,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForIAppService.AppendLine();
                     sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
                     sbForIAppService.AppendLine();
-                    sbForIAppService.AppendLine($"Task<int> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto);");
+                    if (itemForGenerator.IsTypeLong.Value)
+                        sbForIAppService.AppendLine($"Task<long> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto);");
+                    else
+                        sbForIAppService.AppendLine($"Task<int> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto);");
                     sbForIAppService.AppendLine();
                     sbForIAppService.AppendLine($"Task Delete{itemForGenerator.EntityName}ById(int id);");
 
@@ -439,7 +463,7 @@ namespace WpfABPSimpleCodeGenerator
                     {
                         sbForAppService.AppendLine($"using {item.Namespace};");
                     }
-                    sbForAppService.AppendLine($"namespace {DefaultNamespace}");
+                    sbForAppService.AppendLine($"namespace {itemForEdit.Namespace}");
                     sbForAppService.AppendLine("{");//namespace start
 
                     sbForAppService.AppendLine("/// <summary>");
@@ -667,7 +691,7 @@ namespace WpfABPSimpleCodeGenerator
                 foreach (var item in entityFieldItems)
                 {
                     sbForColumns.AppendLine($"{GetFormatterSpace(3)}{{");
-                    sbForColumns.AppendLine($"{GetFormatterSpace(4)}field: '{item.FieldName.Substring(0,1).ToLower()+ item.FieldName.Substring(1)}', sortable: true, title: '{item.FieldSummary}'");
+                    sbForColumns.AppendLine($"{GetFormatterSpace(4)}field: '{item.FieldName.Substring(0, 1).ToLower() + item.FieldName.Substring(1)}', sortable: true, title: '{item.FieldSummary}'");
                     sbForColumns.AppendLine($"{GetFormatterSpace(3)}}},");
                 }
                 sbForColumns.AppendLine($"{GetFormatterSpace(2)}],");
@@ -687,7 +711,7 @@ namespace WpfABPSimpleCodeGenerator
                 sbForHtml.AppendLine($"{GetFormatterSpace(1)}function DeleteById(id) {{");//delete start
                 sbForHtml.AppendLine($"{GetFormatterSpace(2)}abp.message.confirm('是否要删除此行数据?', '提示', function (data) {{");
                 sbForHtml.AppendLine($"{GetFormatterSpace(3)}if (data) {{");
-                sbForHtml.AppendLine($"{GetFormatterSpace(4)}abp.services.app.{itemForGenerator.EntityName.Substring(0,1).ToLower()+ itemForGenerator.EntityName.Substring(1)}.delete{itemForGenerator.EntityName}ById(id, null).done(function () {{");
+                sbForHtml.AppendLine($"{GetFormatterSpace(4)}abp.services.app.{itemForGenerator.EntityName.Substring(0, 1).ToLower() + itemForGenerator.EntityName.Substring(1)}.delete{itemForGenerator.EntityName}ById(id, null).done(function () {{");
                 sbForHtml.AppendLine($"{GetFormatterSpace(5)}table.bootstrapTable('refresh');");
                 sbForHtml.AppendLine($"{GetFormatterSpace(5)}abp.message.success('删除成功', '', false);");
                 sbForHtml.AppendLine($"{GetFormatterSpace(4)}}}).fail(function () {{");
@@ -729,10 +753,14 @@ namespace WpfABPSimpleCodeGenerator
                 var item = new IocItem()
                 {
                     AttributeName = itemForGenerator.EntityName.Substring(0, 1).ToLower() + itemForGenerator.EntityName.Substring(1) + $"Repository",
-                    Code = $"IRepository<{itemForGenerator.EntityName }>",
+                    Code = $"IRepository<{itemForGenerator.EntityName}>",
                     Summary = itemForGenerator.EntitySummary,
-                    Namespace = itemForGenerator.EntityNamespace
+                    Namespace = itemForGenerator.EntityNamespace,
+                    IsTypeLong = itemForGenerator.IsTypeLong
                 };
+
+                if (itemForGenerator.IsTypeLong.Value)
+                    item.Code = $"IRepository<{itemForGenerator.EntityName},long>";
 
                 iocItems.Add(item);
 
@@ -742,14 +770,24 @@ namespace WpfABPSimpleCodeGenerator
                 var folder = dialog.FileName;
                 File.WriteAllText($"{folder}/{itemForGenerator.EntityName}.cs", sbForGenerateEntity.ToString());
 
-                if (itemForGenerator.GenerateDto)
-                    File.WriteAllText($"{folder}/{itemForGenerator.EntityName}Dto.cs", sbForDto.ToString());
-
+              
                 if (itemForGenerator.GenerateAPI)
                 {
-                    File.WriteAllText($"{folder}/{itemForGenerator.EntityName}PagenationOutputDto.cs", sbForPagenationDto.ToString());
-                    File.WriteAllText($"{folder}/I{itemForGenerator.EntityName}AppService.cs", sbForIAppService.ToString());
-                    File.WriteAllText($"{folder}/{itemForGenerator.EntityName}AppService.cs", sbForAppService.ToString());
+                    if (!Directory.Exists($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}"))
+                    {
+                        Directory.CreateDirectory($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}");
+                        if (Directory.Exists($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto"))
+                        {
+                            Directory.CreateDirectory($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto");
+                        }
+                    }
+                    File.WriteAllText($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/I{itemForGenerator.EntityName}AppService.cs", sbForIAppService.ToString());
+                    File.WriteAllText($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/{itemForGenerator.EntityName}AppService.cs", sbForAppService.ToString());
+                }
+                if (itemForGenerator.GenerateDto)
+                {
+                    File.WriteAllText($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto/{itemForGenerator.EntityName}Dto.cs", sbForDto.ToString());
+                    File.WriteAllText($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto/{itemForGenerator.EntityName}PagenationOutputDto.cs", sbForPagenationDto.ToString());
                 }
                 if (itemForGenerator.GenerateHTML)
                     File.WriteAllText($"{folder}/Index.cshtml", sbForHtml.ToString());
@@ -788,5 +826,73 @@ namespace WpfABPSimpleCodeGenerator
             }
             return sb.ToString();
         }
+
+        #region Setting
+        Setting setting = new Setting();
+
+        private string setting_file = "setting_config.json";
+
+        private void LoadSetting()
+        {
+            if (File.Exists(setting_file))
+                setting = JsonConvert.DeserializeObject<Setting>(File.ReadAllText(setting_file));
+        }
+
+        private void SaveSetting()
+        {
+            File.WriteAllText(setting_file, JsonConvert.SerializeObject(setting));
+        }
+
+        private void BtnBrowseDbContextFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                FileName = "FengWoDbContext.cs"
+            };
+            var dia = openFileDialog.ShowDialog();
+            if (dia == true)
+            {
+                setting.DbContextPath = openFileDialog.FileName;
+                SaveSetting();
+            }
+        }
+
+        private void BtnBrowseCoreProjectFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
+            {
+                setting.CoreProjectPath = dialog.FileName;
+                SaveSetting();
+            }
+        }
+
+        private void BtnBrowseApplicationProjectFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
+            {
+                setting.ApplicationProjectPath = dialog.FileName;
+                SaveSetting();
+            }
+        }
+
+        private void BtnBrowseMVCProjectFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
+            {
+                setting.MVCProjectPath = dialog.FileName;
+                SaveSetting();
+            }
+        }
+        #endregion
+
     }
 }
