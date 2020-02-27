@@ -11,4 +11,5 @@
     <sys:String x:Key="HdEmail">Email</sys:String>
     <sys:String x:Key="HdTel">Tel</sys:String>
     <sys:String x:Key="MsgShowTime">Now time is:{0}</sys:String>
+    <sys:String x:Key="Localization">Localization</sys:String>
 </ResourceDictionary>

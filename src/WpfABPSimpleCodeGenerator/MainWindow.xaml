@@ -210,6 +210,9 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="{StaticResource Localization}">
+                
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

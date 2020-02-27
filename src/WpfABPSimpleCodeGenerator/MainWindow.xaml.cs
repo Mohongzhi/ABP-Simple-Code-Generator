@@ -11,13 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfABPSimpleCodeGenerator
 {
@@ -288,7 +282,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForDto.AppendLine("using System;");
                     sbForDto.AppendLine("using Abp.Domain.Entities;");
                     sbForDto.AppendLine($"using {itemForGenerator.EntityNamespace};");
-                    sbForDto.AppendLine($"namespace {DefaultNamespace}");
+                    sbForDto.AppendLine($"namespace {itemForGenerator.EntityNamespace}.Dtos");
                     sbForDto.AppendLine("{");//namespace start
 
                     sbForDto.AppendLine("/// <summary>");
@@ -387,6 +381,7 @@ namespace WpfABPSimpleCodeGenerator
                 #region Pagenation dto
                 {
                     sbForPagenationDto.AppendLine("using System.Collections.Generic;");
+                    sbForPagenationDto.AppendLine($"using {itemForGenerator.EntityNamespace}.Dtos;");
                     sbForPagenationDto.AppendLine($"namespace {DefaultNamespace}");
                     sbForPagenationDto.AppendLine("{");//namespace start
 
@@ -418,7 +413,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForIAppService.AppendLine("using System.Collections.Generic;");
                     sbForIAppService.AppendLine("using FengWo.Dtos;");
                     sbForIAppService.AppendLine("using System.Threading.Tasks;");
-                    sbForIAppService.AppendLine($"namespace {itemForEdit.Namespace}");
+                    sbForIAppService.AppendLine($"namespace {itemForGenerator.EntityNamespace}");
                     sbForIAppService.AppendLine("{");//namespace start
 
                     sbForIAppService.AppendLine("/// <summary>");
@@ -430,14 +425,20 @@ namespace WpfABPSimpleCodeGenerator
 
                     sbForIAppService.AppendLine($"{itemForGenerator.EntityName}PagenationOutputDto Get{itemForGenerator.EntityName}ByPagenation ({DefaultPagenationInputDto} pagedSortedAndSearchInputDto);");
                     sbForIAppService.AppendLine();
-                    sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
+                    if (itemForGenerator.IsTypeLong.Value)
+                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
+                    else
+                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(long Id);");
                     sbForIAppService.AppendLine();
                     if (itemForGenerator.IsTypeLong.Value)
                         sbForIAppService.AppendLine($"Task<long> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto);");
                     else
                         sbForIAppService.AppendLine($"Task<int> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto);");
                     sbForIAppService.AppendLine();
-                    sbForIAppService.AppendLine($"Task Delete{itemForGenerator.EntityName}ById(int id);");
+                    if (itemForGenerator.IsTypeLong.Value)
+                        sbForIAppService.AppendLine($"Task Delete{itemForGenerator.EntityName}ById(long id);");
+                    else
+                        sbForIAppService.AppendLine($"Task Delete{itemForGenerator.EntityName}ById(int id);");
 
                     sbForIAppService.AppendLine("}");//class end
                     sbForIAppService.AppendLine("}");//namespace end
@@ -481,7 +482,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("/// <summary>");
                     sbForAppService.AppendLine($"/// {itemForGenerator.EntitySummary} Repository");
                     sbForAppService.AppendLine("/// </summary>");
-                    sbForAppService.AppendLine($"private readonly IRepository<{itemForGenerator.EntityName}> _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository;");
+                    if (itemForGenerator.IsTypeLong.Value == false)
+                        sbForAppService.AppendLine($"private readonly IRepository<{itemForGenerator.EntityName}> _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository;");
+                    else
+                        sbForAppService.AppendLine($"private readonly IRepository<{itemForGenerator.EntityName},long> _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository;");
                     sbForAppService.AppendLine("");
                     foreach (var item in checkedIocItems)
                     {//Ioc
@@ -496,7 +500,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("/// </summary>");
                     sbForAppService.AppendLine($"public {itemForGenerator.EntityName}AppService(IObjectMapper objectMapper,");
                     StringBuilder sbIOCList = new StringBuilder();
-                    sbIOCList.AppendLine($"IRepository<{itemForGenerator.EntityName}> {itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository,");
+                    if (itemForGenerator.IsTypeLong.Value == false)
+                        sbIOCList.AppendLine($"IRepository<{itemForGenerator.EntityName}> {itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository,");
+                    else
+                        sbIOCList.AppendLine($"IRepository<{itemForGenerator.EntityName},long> {itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository,");
                     var items = checkedIocItems.ToList();
                     for (int i = 0; i < items.Count(); i++)
                     {
@@ -525,7 +532,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("/// </summary>");
                     sbForAppService.AppendLine("/// <param name=\"Id\">Id key</param>");
                     sbForAppService.AppendLine("/// <returns></returns>");
-                    sbForAppService.AppendLine($"public async Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id)");
+                    if (itemForGenerator.IsTypeLong.Value)
+                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
+                    else
+                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(long Id);");
                     sbForAppService.AppendLine("{");//get by id start
                     sbForAppService.AppendLine($"return _objectMapper.Map<{itemForGenerator.EntityName}Dto>(_{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.Get(Id));");
                     sbForAppService.AppendLine("}");//get by id end
@@ -558,7 +568,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("/// </summary>");
                     sbForAppService.AppendLine("/// <param name=\"dto\"></param>");
                     sbForAppService.AppendLine("/// <returns></returns>");
-                    sbForAppService.AppendLine($"public Task<int> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto)");
+                    if (itemForGenerator.IsTypeLong == false)
+                        sbForAppService.AppendLine($"public Task<int> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto)");
+                    else
+                        sbForAppService.AppendLine($"public Task<long> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto)");
                     sbForAppService.AppendLine("{");//create start
                     sbForAppService.AppendLine($"var entity = _objectMapper.Map<{itemForGenerator.EntityName}>(dto);");
                     sbForAppService.AppendLine($"return _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.InsertOrUpdateAndGetIdAsync(entity);");
@@ -569,7 +582,10 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("/// </summary>");
                     sbForAppService.AppendLine("/// <param name=\"id\"></param>");
                     sbForAppService.AppendLine("/// <returns></returns>");
-                    sbForAppService.AppendLine($"public Task Delete{itemForGenerator.EntityName}ById(int id)");
+                    if (itemForGenerator.IsTypeLong == false)
+                        sbForAppService.AppendLine($"public Task Delete{itemForGenerator.EntityName}ById(int id)");
+                    else
+                        sbForAppService.AppendLine($"public Task Delete{itemForGenerator.EntityName}ById(long id)");
                     sbForAppService.AppendLine("{");//delete start
                     sbForAppService.AppendLine($"var entity =  _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.Get(id);");
                     sbForAppService.AppendLine($"return _{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.DeleteAsync(entity);");
@@ -769,14 +785,21 @@ namespace WpfABPSimpleCodeGenerator
 
                 var folder = dialog.FileName;
                 File.WriteAllText($"{folder}/{itemForGenerator.EntityName}.cs", sbForGenerateEntity.ToString());
+                var doNotDelete = "Do not delete this line.";
+                var file = File.ReadAllText(setting.DbContextPath);
+                var indexForDelete = file.IndexOf(doNotDelete);
+                var inseted = file.Insert(indexForDelete + doNotDelete.Length, Environment.NewLine + $@"        /// <summary>
+        /// {itemForGenerator.EntitySummary}
+        /// </summary>
+        public DbSet<{itemForGenerator.EntityName}> {Helper.ToEngString(itemForGenerator.EntityName)} {{ get; set; }}{Environment.NewLine}");
+                File.WriteAllText(setting.DbContextPath, inseted);
 
-              
                 if (itemForGenerator.GenerateAPI)
                 {
                     if (!Directory.Exists($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}"))
                     {
                         Directory.CreateDirectory($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}");
-                        if (Directory.Exists($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto"))
+                        if (!Directory.Exists($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto"))
                         {
                             Directory.CreateDirectory($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto");
                         }
@@ -790,15 +813,14 @@ namespace WpfABPSimpleCodeGenerator
                     File.WriteAllText($"{setting.ApplicationProjectPath}/{itemForGenerator.EntityName}/Dto/{itemForGenerator.EntityName}PagenationOutputDto.cs", sbForPagenationDto.ToString());
                 }
                 if (itemForGenerator.GenerateHTML)
-                    File.WriteAllText($"{folder}/Index.cshtml", sbForHtml.ToString());
+                    File.WriteAllText($"{setting.MVCProjectPath}/Views/{itemForGenerator.EntityName}.cshtml", sbForHtml.ToString());
                 MessageBox.Show("保存完成");
                 try
                 {
-                    System.Diagnostics.Process.Start(folder);
+                    System.Diagnostics.Process.Start(setting.MVCProjectPath);
                 }
                 catch
                 {
-
                 }
             }
         }
