@@ -99,6 +99,7 @@ namespace WpfABPSimpleCodeGenerator
             TxtCoreProjectPath.DataContext = setting;
             TxtDbContextPath.DataContext = setting;
             TxtMVCProjectPath.DataContext = setting;
+            TxtLocalizationPath.DataContext = setting;
         }
 
         #region Basic data management 基础数据管理
@@ -381,8 +382,7 @@ namespace WpfABPSimpleCodeGenerator
                 #region Pagenation dto
                 {
                     sbForPagenationDto.AppendLine("using System.Collections.Generic;");
-                    sbForPagenationDto.AppendLine($"using {itemForGenerator.EntityNamespace}.Dtos;");
-                    sbForPagenationDto.AppendLine($"namespace {DefaultNamespace}");
+                    sbForPagenationDto.AppendLine($"namespace {itemForGenerator.EntityNamespace}.Dtos");
                     sbForPagenationDto.AppendLine("{");//namespace start
 
                     sbForPagenationDto.AppendLine("/// <summary>");
@@ -413,6 +413,7 @@ namespace WpfABPSimpleCodeGenerator
                     sbForIAppService.AppendLine("using System.Collections.Generic;");
                     sbForIAppService.AppendLine("using FengWo.Dtos;");
                     sbForIAppService.AppendLine("using System.Threading.Tasks;");
+                    sbForIAppService.AppendLine($"using {itemForGenerator.EntityNamespace}.Dtos;");
                     sbForIAppService.AppendLine($"namespace {itemForGenerator.EntityNamespace}");
                     sbForIAppService.AppendLine("{");//namespace start
 
@@ -426,9 +427,9 @@ namespace WpfABPSimpleCodeGenerator
                     sbForIAppService.AppendLine($"{itemForGenerator.EntityName}PagenationOutputDto Get{itemForGenerator.EntityName}ByPagenation ({DefaultPagenationInputDto} pagedSortedAndSearchInputDto);");
                     sbForIAppService.AppendLine();
                     if (itemForGenerator.IsTypeLong.Value)
-                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
-                    else
                         sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(long Id);");
+                    else
+                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
                     sbForIAppService.AppendLine();
                     if (itemForGenerator.IsTypeLong.Value)
                         sbForIAppService.AppendLine($"Task<long> CreateOrUpdate{itemForGenerator.EntityName}({itemForGenerator.EntityName}Dto dto);");
@@ -459,12 +460,13 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("using Newtonsoft.Json.Linq;");
                     sbForAppService.AppendLine("using Abp.Application.Services;");
                     sbForAppService.AppendLine($"using {itemForGenerator.EntityNamespace};");
+                    sbForAppService.AppendLine($"using {itemForGenerator.EntityNamespace}.Dtos;");
 
                     foreach (var item in checkedIocItems)//IOC namespace
                     {
                         sbForAppService.AppendLine($"using {item.Namespace};");
                     }
-                    sbForAppService.AppendLine($"namespace {itemForEdit.Namespace}");
+                    sbForAppService.AppendLine($"namespace {itemForGenerator.EntityNamespace}");
                     sbForAppService.AppendLine("{");//namespace start
 
                     sbForAppService.AppendLine("/// <summary>");
@@ -533,11 +535,11 @@ namespace WpfABPSimpleCodeGenerator
                     sbForAppService.AppendLine("/// <param name=\"Id\">Id key</param>");
                     sbForAppService.AppendLine("/// <returns></returns>");
                     if (itemForGenerator.IsTypeLong.Value)
-                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id);");
+                        sbForAppService.AppendLine($"public Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(long Id)");
                     else
-                        sbForIAppService.AppendLine($"Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(long Id);");
+                        sbForAppService.AppendLine($"public Task<{itemForGenerator.EntityName}Dto> Get{itemForGenerator.EntityName}ById(int Id)");
                     sbForAppService.AppendLine("{");//get by id start
-                    sbForAppService.AppendLine($"return _objectMapper.Map<{itemForGenerator.EntityName}Dto>(_{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.Get(Id));");
+                    sbForAppService.AppendLine($"return Task.FromResult(_objectMapper.Map<{itemForGenerator.EntityName}Dto>(_{itemForGenerator.EntityName.Substring(0, 1).ToLower()}{itemForGenerator.EntityName.Substring(1)}Repository.Get(Id)));");
                     sbForAppService.AppendLine("}");//get by id end
 
                     sbForAppService.AppendLine("/// <summary>");
@@ -911,6 +913,17 @@ namespace WpfABPSimpleCodeGenerator
             if (result == CommonFileDialogResult.Ok)
             {
                 setting.MVCProjectPath = dialog.FileName;
+                SaveSetting();
+            }
+        }
+        private void BtnBrowseLocalizationFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
+            {
+                setting.LocalizationPath = dialog.FileName;
                 SaveSetting();
             }
         }

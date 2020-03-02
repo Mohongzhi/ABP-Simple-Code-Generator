@@ -208,11 +208,14 @@
                         <TextBox  Name="TxtMVCProjectPath" Text="{Binding MVCProjectPath}" IsReadOnly="True" Width="320"></TextBox>
                         <Button Name="BtnBrowseMVCProjectFilePath" Margin="4,0,0,0" Click="BtnBrowseMVCProjectFilePath_Click">Browse</Button>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <Label Content="localization file folder path:"></Label>
+                        <TextBox  Name="TxtLocalizationPath" Text="{Binding LocalizationPath}" IsReadOnly="True" Width="320"></TextBox>
+                        <Button Name="BtnBrowseLocalizationFilePath" Margin="4,0,0,0" Click="BtnBrowseLocalizationFilePath_Click">Browse</Button>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="{StaticResource Localization}">
-                
-            </TabItem>
+
         </TabControl>
     </Grid>
 </Window>

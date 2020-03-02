@@ -67,6 +67,20 @@ namespace WpfABPSimpleCodeGenerator
             }
         }
 
+        private string _LocalizationPath;
+
+        public string LocalizationPath
+        {
+            get
+            {
+                return _LocalizationPath;
+            }
+            set
+            {
+                _LocalizationPath = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("LocalizationPath"));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
